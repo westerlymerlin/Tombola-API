@@ -1,4 +1,4 @@
-# UCL-tombola
+# Tombola API Controller Service
 
 **An application to control the Riverbed Simulator.**
 <br>
