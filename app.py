@@ -88,45 +88,45 @@ def api():
 
 @app.route('/pylog')  # display the application log
 def showplogs():
-    """Displays the application log file via the logs.html template"""
+    """Displays the application log file via the logviewer.html template"""
     with open(settings['logfilepath'], 'r', encoding='UTF-8') as f:
         log = f.readlines()
     f.close()
     log.reverse()
     logs = tuple(log)
-    return render_template('logs.html', rows=logs, log='Tombola log', version=VERSION)
+    return render_template('logviewer.html', rows=logs, log='Tombola log', version=VERSION)
 
 
 @app.route('/guaccesslog')  # display the gunicorn access log
 def showgalogs():
-    """Displays the gunicorn access log file via the logs.html template"""
+    """Displays the gunicorn access log file via the logviewer.html template"""
     with open(settings['gunicornpath'] + 'gunicorn-access.log', 'r', encoding='UTF-8') as f:
         log = f.readlines()
     f.close()
     log.reverse()
     logs = tuple(log)
-    return render_template('logs.html', rows=logs, log='gunicorn access log', version=VERSION)
+    return render_template('logviewer.html', rows=logs, log='gunicorn access log', version=VERSION)
 
 
 @app.route('/guerrorlog')  # display the gunicorn error log
 def showgelogs():
-    """Displays the gunicorn error log file via the logs.html template"""
+    """Displays the gunicorn error log file via the logviewer.html template"""
     with open(settings['gunicornpath'] + 'gunicorn-error.log', 'r', encoding='UTF-8') as f:
         log = f.readlines()
     f.close()
     log.reverse()
     logs = tuple(log)
-    return render_template('logs.html', rows=logs, log='gunicorn error log', version=VERSION)
+    return render_template('logviewer.html', rows=logs, log='gunicorn error log', version=VERSION)
 
 
 @app.route('/syslog')  # display the raspberry pi system log
 def showslogs():
-    """Displays the last 2000 lines if the system log file via the logs.html template"""
+    """Displays the last 2000 lines if the system log file via the logviewer.html template"""
     log = subprocess.Popen('journalctl --system --system -n 2000', shell=True,
                            stdout=subprocess.PIPE).stdout.read().decode(encoding='utf-8')
     logs = log.split('\n')
     logs.reverse()
-    return render_template('logs.html', rows=logs, log='system log', version=VERSION)
+    return render_template('logviewer.html', rows=logs, log='system log', version=VERSION)
 
 
 if __name__ == '__main__':

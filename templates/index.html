@@ -42,7 +42,12 @@ async function getstatusdata() {
 
     <section class="banner">
 		  <div >
-               <P class="logo">Riverbed Simulator - Tombola Controller Status &nbsp CPU <strong id="123-cpu">awaiting-data</strong>&deg;C</P>
+              <table>
+                <tr>
+                    <td><img width="100" src="{{ url_for('static', filename='images/tstwhitelogo.png') }}" alt="TS Technologies Logo"></td>
+                    <td><P class="logo">Riverbed Simulator<br> Tombola Controller Status &nbsp CPU <strong id="123-cpu">awaiting-data</strong>&deg;C</P></td>
+                </tr>
+              </table>
               <p class="breadcrumbtext"><a href = "/" class="breadcrumblink">Return to index</a> &nbsp|&nbsp
               <a href = "/pylog" class="breadcrumblink">Application Log</a> &nbsp|&nbsp
               <a href = "/guaccesslog" class="breadcrumblink">Website Access Log</a> &nbsp|&nbsp
