@@ -23,7 +23,7 @@ Features:
 
 This application is designed to be served by Gunicorn in a production environment.
 
-Author: Gary Twinnington
+Author: Gary Twinn
 URL: https://github.com/garytwinnington/tombola-py-web-app
 
 [app_control](./app_control.md)  
