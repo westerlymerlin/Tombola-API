@@ -13,7 +13,7 @@ Features:
 
 This application is designed to be served by Gunicorn in a production environment.
 
-Author: Gary Twinnington
+Author: Gary Twinn
 URL: https://github.com/garytwinnington/tombola-py-web-app
 """
 
@@ -46,12 +46,12 @@ def index():
     if request.method == 'POST':
         # print(request.form)
         if len(request.form) == 0:
-            logger.warning('Index page: Invalid Web Post Recieved - returning 405 to %s',
+            logger.warning('Index page: Invalid Web Post Received - returning 405 to %s',
                            request.headers['X-Forwarded-For'])
             return '<!doctype html><html lang=en><title>405 Method Not Allowed</title>' \
                    '<h1>Method Not Allowed</h1>' \
                    '<p>The method is not allowed for the requested URL.</p>', 405
-        logger.debug('Index page: Web Post recieved')
+        logger.debug('Index page: Web Post received')
         tom.parse_control_message(request.form)
     return render_template('index.html', rpm_max=settings['rpm_max'], version=VERSION,
                            rpm=tom.requested_rpm, stoptimer=tom.get_stop_time(), threadcount=threadlister())
@@ -71,14 +71,14 @@ def statusdata():
 
 @app.route('/api', methods=['POST'])
 def api():
-    """API Endpoint for programatic access - needs request data to be posted in a json file"""
+    """API Endpoint for programmatic access - needs request data to be posted in a json file"""
     try:
         if 'Api-Key' in request.headers.keys():  # check api key exists
             if request.headers['Api-Key'] == settings['api-key']:  # check for correct API key
                 status = tom.parse_control_message(request.json)
                 return jsonify(status), 201
-            logger.warning('API: access attempt using an ivalid token from %s', request.headers['X-Forwarded-For'])
-            return 'access token(s) unuthorised', 401
+            logger.warning('API: access attempt using an invalid token from %s', request.headers['X-Forwarded-For'])
+            return 'access token(s) unauthorised', 401
         logger.warning('API: access attempt without a token from %s', request.headers['X-Forwarded-For'])
         return 'access token(s) incorrect', 401
     except KeyError:
