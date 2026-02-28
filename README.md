@@ -2,7 +2,7 @@
 
 **An application to control the Riverbed Simulator.**
 <br>
-The River simulator consistes of a large (1m diameter) drum that can contain water, cement blocks simulate rocks on the riverbed.
+The River simulator consists of a large (1m diameter) drum that can contain water, cement blocks simulate rocks on the riverbed.
 The drum is driven by a 1/4 hp 3 phase motor.
 
 The 3 phase motor is controlled by a **Siemens V20** single phase to 3 phase invertor which is controled via an RS485 
@@ -10,12 +10,12 @@ interface using the modbus protocol<br>
 **V20 Datasheet:**
 https://support.industry.siemens.com/cs/attachments/109824500/V20_op_instr_0823_en-US.pdf
   
-The contoller application runs on a **Raspberry Pi 3B or 4B** single board computer. It is written in Python and uses 
+The controller application runs on a **Raspberry Pi 3B, 4B pr 5** single board computer. It is written in Python and uses 
 Flask for the Web application server. A USB RS485 controller provides connectivity to the V20 Invertor and the python 
 library **Minimal Modbus** is used for the Modbus protocol.<br>
 **Minimal Modbus Library Documentation** https://minimalmodbus.readthedocs.io/en/stable/
 
-Application dcumentaton can be found in [readme.pdf](./README.pdf)
+Application documentation can be found in [readme.pdf](./README.pdf)
 
 Python module documentation can be found in the folder: [docs](./docs/readme.md)
 
