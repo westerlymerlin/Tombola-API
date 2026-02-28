@@ -121,7 +121,7 @@ API Endpoint for programatic access - needs request data to be posted in a json 
 def showplogs()
 ```
 
-Displays the application log file via the logs.html template
+Displays the application log file via the logviewer.html template
 
 <a id="app.showgalogs"></a>
 
@@ -132,7 +132,7 @@ Displays the application log file via the logs.html template
 def showgalogs()
 ```
 
-Displays the gunicorn access log file via the logs.html template
+Displays the gunicorn access log file via the logviewer.html template
 
 <a id="app.showgelogs"></a>
 
@@ -143,7 +143,7 @@ Displays the gunicorn access log file via the logs.html template
 def showgelogs()
 ```
 
-Displays the gunicorn error log file via the logs.html template
+Displays the gunicorn error log file via the logviewer.html template
 
 <a id="app.showslogs"></a>
 
@@ -154,5 +154,5 @@ Displays the gunicorn error log file via the logs.html template
 def showslogs()
 ```
 
-Displays the last 2000 lines if the system log file via the logs.html template
+Displays the last 2000 lines if the system log file via the logviewer.html template
 
