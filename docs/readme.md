@@ -23,7 +23,7 @@ Features:
 
 This application is designed to be served by Gunicorn in a production environment.
 
-Author: Gary Twinnington
+Author: Gary Twinn
 URL: https://github.com/garytwinnington/tombola-py-web-app
 
 [app_control](./app_control.md)  
@@ -122,10 +122,7 @@ to send stop start messages to the app.
 
   
 -------
-
 #### Copyright (C) 2026 Gary Twinn  
-=======
-
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
