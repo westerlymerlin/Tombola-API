@@ -24,7 +24,7 @@ Features:
 This application is designed to be served by Gunicorn in a production environment.
 
 Author: Gary Twinn
-URL: https://github.com/garytwinnington/tombola-py-web-app
+URL: https://github.com/westerlymerlin
 
 [app_control](./app_control.md)  
 Settings Management Module
