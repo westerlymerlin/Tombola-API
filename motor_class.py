@@ -4,21 +4,7 @@ Motor Control Module for V20 Controller
 This module provides a comprehensive interface for controlling an electric motor via a V20 controller
 using Modbus RTU protocol over RS485. It handles motor speed control, direction, auto-shutdown,
 and monitoring of motor parameters including RPM, voltage, and current.
-
-Key features:
-- Two-way communication with V20 motor controller via Modbus RTU
-- Real-time RPM monitoring and speed adjustment
-- Auto-shutdown capability based on configurable timer
-- Error handling for connection issues and timeouts
-- Comprehensive logging of motor operations and errors
-
-Dependencies:
-- minimalmodbus: Handles Modbus RTU communication
-- serial: Manages serial port connections
-- rpm_class: Provides actual motor speed measurement
-- app_control: Manages application settings
-- logmanager: Handles logging
-
+Provides a motor control interface utilising Modbus communication.
 """
 
 from time import sleep
@@ -33,22 +19,29 @@ from logmanager import logger
 
 class MotorClass:
     """
-    Represents a motor controller.
+    Represents a motor controller that interfaces with an RS485 communication protocol.
+
+    This class provides functionality to initialize and control a motor using commands
+    and queries sent over RS485. The motor controller adjusts various operational parameters
+    such as speed, direction, and frequency based on user input and feedback from the motor.
+    It includes mechanisms for monitoring the motor's current state and automatically adjusting
+    its parameters to maintain desired performance levels. The class also handles communication
+    errors and ensures that the controller operates within its preconfigured limits.
 
     Attributes:
-        command_start_register (int): Starting register for sending commands.
-        stw_control_register (int): Control register for the STW.
-        query_start_register (int): Starting register for querying the controller.
-        controller (Instrument): MinimalModbus instrument for communicating with the controller.
-        read_length (int): Number of consecutive registers to read.
-        direction (int): Direction of motor rotation (0 - forward, 1 - reverse).
-        frequency (float): Motor frequency (0-100%).
-        running (int): Status of motor (0 - disabled, 1 - enabled).
-        autoshutdown (bool): Flag indicating whether autoshutdown is enabled.
-        autoshutdowntime (int): Time after which the motor is shutdown if not used (in minutes).
-        rpm_hz (float): Conversion factor from RPM to Hz.
-        requested_rpm (float): Requested motor speed in RPM.
-        rpm (RPMClass): RPMClass object for getting actual motor speed.
+        command_start_register (int): Register address for sending control commands.
+        stw_control_register (int): Register address for sending start/stop commands.
+        query_start_register (int): Register address to initiate data queries.
+        read_length (int): Number of registers to read during a query.
+        direction (int): Indicates motor direction; 0 for forward, 1 for reverse.
+        frequency (int): Operating frequency of the motor, expressed as a percentage (0-100%).
+        running (int): State of the motor; 0 for disabled, 1 for enabled.
+        autoshutdown (bool): Determines if the motor will shut down automatically after inactivity.
+        autoshutdowntime (int): Time duration (in seconds) before the motor shuts down automatically.
+        rpm_hz (int): Ratio of revolutions per minute (RPM) to frequency (Hz).
+        requested_rpm (float): The desired RPM of the motor.
+        serialaccess (bool): Indicates whether the class is actively communicating with the controller.
+        rpm (RPMClass): Instance of the RPMClass used to measure and control motor speed.
     """
     def __init__(self):
         self.command_start_register = settings['control_start_register']
@@ -89,16 +82,24 @@ class MotorClass:
 
     def set_speed(self, required_rpm):
         """
-        Sets the motor speed to the specified revolutions per minute (RPM). Validates
-        the input, ensuring it is converted to a valid number, within allowable limits,
-        and adjusts the operation of the motor accordingly.
+        Sets the speed of the motor to the specified revolutions per minute (RPM).
+
+        This method adjusts the motor's speed based on the provided RPM value. It ensures
+        that the RPM is within acceptable limits, stopping the motor if the RPM is below
+        a minimum threshold and capping the RPM at a predefined maximum. The motor's
+        running state and direction are updated accordingly, and the speed control logic
+        is invoked.
 
         Args:
-            required_rpm (float): The desired speed in revolutions per minute (RPM).
-                Must be a positive number and should not exceed the preconfigured
-                maximum RPM value.
+            required_rpm (float | int): The desired speed in revolutions per minute (RPM).
+                                        This value is rounded to one decimal place.
 
-        Returns:
+        Raises:
+            ValueError: The method does not raise this error internally, but it ensures
+                        that non-convertible inputs are ignored without interrupting
+                        execution.
+
+        Return:
             None
         """
         try:
@@ -116,10 +117,15 @@ class MotorClass:
         logger.debug('MotorClass: Set speed: %s', required_rpm)
 
     def rpm_controller(self):
-        """takes the speed in rpm and the desired speed and sets the controller frequency
-           if the speed varies it will bump the frequency by +- the frequiency_rpm value to
-           keep rpm withjin 0.1 rpm. Multi threadedd with threads running every 10 seconds
-           when the machine is running"""
+        """
+        Monitors and adjusts the drum motor's RPM to maintain the requested RPM value.
+
+        This method is executed periodically while the motor is running. It compares the
+        current RPM to the requested RPM and adjusts the motor frequency if necessary
+        to minimise the difference. Adjustments depend on the magnitude of the RPM
+        difference and update the motor control accordingly. If the RPM-hz ratio
+        stabilises, it recalculates the steady value for further adjustments.
+        """
         rpm = self.rpm.get_rpm()
         speedchanged = 1
         if self.running:  # run this check in 10s if the drum is running
@@ -158,15 +164,13 @@ class MotorClass:
 
     def stop(self):
         """
-        Stops the motor operation by resetting operational parameters and sending
-        the stop command to the controller. Handles exceptions for communication
-        issues with the motor controller.
+        Stops the motor operation.
 
-        Raises:
-            AttributeError: If the RS485 Controller is absent or incorrectly
-            initialized, triggering an error.
-            minimalmodbus.NoResponseError: If the RS485 communication times out,
-            signaling a communication error.
+        This method halts the motor by resetting its direction, frequency, requested
+        RPM, and running state to zero. It also communicates the stop command to the
+        motor controller, ensuring that the motor stops safely. The method handles
+        potential errors during communication with the controller and updates the
+        `serialaccess` attribute to indicate the status of the communication link.
         """
         self.direction = 0
         self.frequency = 0
@@ -186,8 +190,14 @@ class MotorClass:
 
 
     def controller_command(self, message):
-        """Sends the message (a number of words) to the v20 starting at the
-        command_start_register"""
+        """
+        Executes a command by writing a message to the controller's registers.
+
+        This method ensures exclusive access to a serial connection while interacting
+        with the controller. It writes the provided message to the starting register
+        of the controller, then closes the serial connection, and resets the access flag.
+
+        """
         while self.serialaccess:
             pass
         self.controller.write_registers(self.command_start_register, message)
@@ -195,8 +205,23 @@ class MotorClass:
         self.serialaccess = False
 
     def controller_query(self):
-        """Reads from the controller, starting at the query_start_register and
-         returns the read_length number of consecutive registers """
+        """
+        Queries the motor controller to retrieve operational and configuration data. The method
+        communicates with the motor controller using RS485 communication, retrieves register
+        values for actual and setting data, and handles various error scenarios during communication.
+
+        Returns:
+            dict: A dictionary containing the following keys:
+                - running (bool): Indicates if the motor is running.
+                - reqfrequency (float): Requested frequency divided by 100.
+                - frequency (float or str): Actual frequency divided by 100, or an error message
+                  if communication fails.
+                - voltage (int or str): Actual voltage value, or an error message if communication fails.
+                - current (float or str): Actual current divided by 100, or an error message if communication fails.
+                - rpm (int or str): Actual RPM value, or an error message if communication fails.
+                - tombola_speed (str): Current tombola speed formatted to two decimal places.
+                - requested_speed (float): The requested RPM value.
+        """
         while self.serialaccess:
             pass
         self.serialaccess = True
@@ -241,13 +266,27 @@ class MotorClass:
                     'requested_speed': self.requested_rpm}
 
     def print_controlword(self):
-        """Writes the value of the STW control word to the application log (used for debugging)"""
+        """
+        Reads the control word from a specific register and logs the retrieved data.
+
+        This method interacts with the controller's register to read motor-related
+        control information. It ensures the serial connection is subsequently closed
+        after the operation and logs the retrieved control word.
+        """
         data = self.controller.read_register(99, 0, 3)
         self.controller.serial.close()
         logger.info('Motorclass: read control word: %s', data)
 
     def read_register(self, reg):
-        """returns the value of the registry specified via the API"""
+        """
+        Reads a specified register from the RS485 controller and returns the value.
+
+        This method communicates with an RS485 controller to retrieve the value from
+        a specified register. The function first attempts to read the register and logs
+        the result for debugging purposes. If the controller is unavailable or there is
+        a timeout issue, the function logs the corresponding error and returns an
+        appropriate response.
+        """
         try:
             data = self.controller.read_register(reg, 0, 3)
             self.controller.serial.close()
@@ -261,7 +300,13 @@ class MotorClass:
             return {'register': reg, 'word': 'RS485 Timeout'}
 
     def write_register(self, reg, controlword):
-        """api call that writes the controlword specified into the v20 register specified"""
+        """
+        Writes a value to a specified register of the RS485 controller.
+
+        This method writes the provided control word to the given register of the RS485
+        controller. The serial connection is closed after the write operation. Logs
+        informational or error messages depending on the outcome of the operation.
+        """
         try:
             self.controller.write_register(reg, controlword)
             self.controller.serial.close()
@@ -272,8 +317,14 @@ class MotorClass:
             logger.error('MotorClass: write_register function error RS485 timeout')
 
     def set_stop_time(self, autostop, stoptime):
-        """website call or API call that sets the stop timer consists of a boolean switch 'autostop'
-        and at time HH:MM:SS"""
+        """
+        Sets the stop time and autoshutdown configuration for the motor.
+
+        This method updates the settings for automated shutdown of the motor,
+        enabling or disabling the feature and defining the specific shutdown
+        time. The provided shutdown time is validated to ensure correct format
+        before applying the updates.
+        """
         if time_format_check(stoptime):
             self.autoshutdown = autostop
             settings['autoshutdown'] = autostop
@@ -283,11 +334,22 @@ class MotorClass:
             writesettings()
 
     def get_stop_time(self):
-        """Returns the stop time and is the autostop function is enabled"""
+        """
+        Gets the stop time configuration.
+
+        This method retrieves the configuration details related to the stop time,
+        including whether auto-stop is enabled and the configured stop time.
+        """
         return {'autostop': self.autoshutdown, 'stoptime': self.autoshutdowntime}
 
     def auto_stop_timer(self):
-        """Thread that checks if the time has matched the autostop time and stops the motor"""
+        """
+        Monitors and automatically stops the motor when the specified auto shutdown time is reached.
+
+        Summary:
+        This method continuously checks whether the auto shutdown feature is enabled and the motor is running. If the
+        current time exceeds the configured auto shutdown time, it triggers the motor's stop functionality.
+        """
         while True:
             if self.autoshutdown and self.running:
                 stoptime = datetime.strptime(datetime.now().strftime('%d/%m/%Y ') +
@@ -352,14 +414,41 @@ class MotorClass:
 
 
 def running(value):
-    """Returns text value based on running state"""
+    """
+    Determines the operational state based on the given value.
+
+    The function evaluates the integer input and returns a string
+    indicating whether the system is "Running" or "Stopped".
+
+    Parameters:
+    value (int): The input value to evaluate. Expected values are integers.
+
+    Returns:
+    str: Returns "Running" if the input value is 1. Returns "Stopped"
+    otherwise.
+    """
     if value == 1:
         return 'Running'
     return 'Stopped'
 
 
 def time_format_check(value):
-    """Tests if a time string is in the correct format"""
+    """
+    Checks if a given string adheres to the 'HH:MM:SS' time format.
+
+    This function validates whether the input string follows the proper 24-hour
+    time format 'HH:MM:SS'. It uses the `datetime.strptime` function for this
+    purpose. If the format is correct, the function returns True. Otherwise, it
+    returns False.
+
+    Parameters:
+    value : str
+        The string to be checked for compliance with the 'HH:MM:SS' time format.
+
+    Returns:
+    bool
+        True if the string adheres to the 'HH:MM:SS' time format, otherwise False.
+    """
     try:
         datetime.strptime(value, '%H:%M:%S')
         return True

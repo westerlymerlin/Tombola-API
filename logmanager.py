@@ -1,12 +1,12 @@
 """
 Logging Configuration and Management
 
-This module provides centralized logging configuration and management for the application.
+This module provides centralised logging configuration and management for the application.
 Configures logging formats, handlers, and log file management to ensure consistent
 logging across all application components.
 
 Features:
-    - Standardized log formatting
+    - Standardised log formatting
     - File-based logging with rotation
     - Log level management
     - Thread-safe logging operations
