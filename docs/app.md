@@ -18,7 +18,7 @@ Features:
 
 This application is designed to be served by Gunicorn in a production environment.
 
-Author: Gary Twinnington
+Author: Gary Twinn
 URL: https://github.com/garytwinnington/tombola-py-web-app
 
 <a id="app.subprocess"></a>
@@ -110,7 +110,7 @@ Status data read by javascript on default website
 def api()
 ```
 
-API Endpoint for programatic access - needs request data to be posted in a json file
+API Endpoint for programmatic access - needs request data to be posted in a json file
 
 <a id="app.showplogs"></a>
 
