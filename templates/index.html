@@ -1,42 +1,38 @@
 <!doctype html>
 <html lang="en-US">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Riverbed Simulator - Tombola Controller</title>
-<link href="{{ url_for('static',filename='css/text.css') }}" rel="stylesheet" type="text/css">
-<link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-<script>
-
-setInterval(getstatusdata, 1500);
-
-async function getstatusdata() {
-  const response = await fetch("/statusdata");
-  const statusdata = await response.json();
-  var idtoupdate = document.getElementById('123-cpu');
-  idtoupdate.innerHTML = statusdata.cpu;
-  var idtoupdate = document.getElementById('456-running');
-  idtoupdate.innerHTML = statusdata.running;
-  var idtoupdate = document.getElementById('123-frequency');
-  idtoupdate.innerHTML = statusdata.frequency;
-  var idtoupdate = document.getElementById('456-frequency');
-  idtoupdate.innerHTML = statusdata.reqfrequency;
-  var idtoupdate = document.getElementById('123-voltage');
-  idtoupdate.innerHTML = statusdata.voltage;
-  var idtoupdate = document.getElementById('123-current');
-  idtoupdate.innerHTML = statusdata.current;
-  var idtoupdate = document.getElementById('123-rpm');
-  idtoupdate.innerHTML = statusdata.rpm;
-  var idtoupdate = document.getElementById('123-tom-rpm');
-  idtoupdate.innerHTML = statusdata.tombola_speed;
-    var idtoupdate = document.getElementById('456-tom-rpm');
-  idtoupdate.innerHTML = statusdata.requested_speed;
-
-}
-
-</script>
-
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Riverbed Simulator - Tombola Controller</title>
+        <link href="{{ url_for('static',filename='css/text.css') }}" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+        <script src="{{ url_for('static', filename='script/common.js') }}"></script>
+        <script>
+            setInterval(getstatusdata, 1500);
+            async function getstatusdata() {
+              const response = await fetch("/statusdata");
+              const statusdata = await response.json();
+              var idtoupdate = document.getElementById('123-cpu');
+              idtoupdate.innerHTML = statusdata.cpu;
+              var idtoupdate = document.getElementById('456-running');
+              idtoupdate.innerHTML = statusdata.running;
+              var idtoupdate = document.getElementById('123-frequency');
+              idtoupdate.innerHTML = statusdata.frequency;
+              var idtoupdate = document.getElementById('456-frequency');
+              idtoupdate.innerHTML = statusdata.reqfrequency;
+              var idtoupdate = document.getElementById('123-voltage');
+              idtoupdate.innerHTML = statusdata.voltage;
+              var idtoupdate = document.getElementById('123-current');
+              idtoupdate.innerHTML = statusdata.current;
+              var idtoupdate = document.getElementById('123-rpm');
+              idtoupdate.innerHTML = statusdata.rpm;
+              var idtoupdate = document.getElementById('123-tom-rpm');
+              idtoupdate.innerHTML = statusdata.tombola_speed;
+              var idtoupdate = document.getElementById('456-tom-rpm');
+              idtoupdate.innerHTML = statusdata.requested_speed;
+            }
+        </script>
 </head>
 <body onload="getstatusdata()">
 
@@ -44,7 +40,6 @@ async function getstatusdata() {
 		  <div >
               <table>
                 <tr>
-                    <td><img width="100" src="{{ url_for('static', filename='images/tstwhitelogo.png') }}" alt="TS Technologies Logo"></td>
                     <td><P class="logo">Riverbed Simulator<br> Tombola Controller Status &nbsp CPU <strong id="123-cpu">awaiting-data</strong>&deg;C</P></td>
                 </tr>
               </table>
@@ -129,6 +124,21 @@ async function getstatusdata() {
     </table>
 
     <p>&nbsp</p>
+<p>&nbsp</p>
+            <table>
+                <thead>
+                    <td class="tabledataleft"><a href = "/VideoFeed0">Camera 0</a></td>
+                </thead>
+                <tr>
+                    <td class="tableimage" >
+                        <img
+                                src="{{ url_for('video_feed0') }}"
+                                alt=" Webcam feed camera 0"
+                                onclick="openModal(this.src)"
+                                style="cursor: pointer;"></img>
+                    </td>
+                </tr>
+            </table>
 </section>
   <section class="banner">
  <div class ="copyright"><strong>Software Version</strong> {{version}} </div>
