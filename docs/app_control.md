@@ -20,6 +20,10 @@ Features:
 Usage:
     import from app_control import settings, writesettings
 
+<a id="app_control.random"></a>
+
+## random
+
 <a id="app_control.json"></a>
 
 ## json
@@ -40,7 +44,8 @@ Usage:
 def writesettings()
 ```
 
-Write settings to json file
+Updates the 'LastSave' field in the settings dictionary with the current datetime
+and writes the updated settings dictionary to a JSON file.
 
 <a id="app_control.initialise"></a>
 
@@ -50,7 +55,22 @@ Write settings to json file
 def initialise()
 ```
 
-Setup the settings structure with default values
+Initialises and returns the default settings for the application.
+
+This function provides the default configuration required for the application to function. It creates a
+dictionary with predefined default values such as system logs, paths, hardware configurations,
+and operational parameters. The intended use of this function is to establish a baseline for the
+app's settings when it is run for the first time.
+
+<a id="app_control.generate_api_key"></a>
+
+#### generate\_api\_key
+
+```python
+def generate_api_key(key_len)
+```
+
+generate a new random api-key
 
 <a id="app_control.readsettings"></a>
 
@@ -60,7 +80,11 @@ Setup the settings structure with default values
 def readsettings()
 ```
 
-Read the json file
+Reads settings from a JSON file.
+
+This function attempts to load a JSON file named 'settings.json' into
+a dictionary. If the file is not found, it handles the exception and
+returns an empty dictionary. The file is expected to be UTF-8 encoded.
 
 <a id="app_control.loadsettings"></a>
 
@@ -70,7 +94,10 @@ Read the json file
 def loadsettings()
 ```
 
-Replace the default settings with thsoe from the json files
+Loads the application settings and updates them based on the values read from an external
+source. The method compares the existing `settings` with the default settings, and updates
+the `settings` with the values if available. If a default value is used for any setting
+due to its absence in the external source, the updated settings are saved back.
 
 <a id="app_control.settings"></a>
 
