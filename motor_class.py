@@ -259,7 +259,7 @@ class MotorClass:
         except serial.serialutil.SerialException:
             self.controller.serial.close()
             self.serialaccess = False
-            logger.error('MotorClass: Controller Query Error: unhandled ex eption', exc_info=BaseException)
+            logger.error('MotorClass: Controller Query Error: unhandled exception', exc_info=BaseException)
             return {'running': running(self.running), 'reqfrequency': self.frequency / 100,
                     'frequency': '-', 'voltage': '-', 'current': '-', 'rpm': '-',
                     'tombola_speed': '%.2f' % self.rpm.get_rpm(),
