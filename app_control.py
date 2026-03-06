@@ -17,22 +17,33 @@ Usage:
 
 """
 
+import random
 import json
 from datetime import datetime
 
 
-VERSION = '1.7.5'
+VERSION = '1.8.0'
 
 
 def writesettings():
-    """Write settings to json file"""
+    """
+    Updates the 'LastSave' field in the settings dictionary with the current datetime
+    and writes the updated settings dictionary to a JSON file.
+    """
     settings['LastSave'] = datetime.now().strftime('%d/%m/%y %H:%M:%S')
     with open('settings.json', 'w', encoding='UTF-8') as outfile:
         json.dump(settings, outfile, indent=4, sort_keys=True)
 
 
-def initialise():  # Default values written to the settings.json file the first time the app is run
-    """Setup the settings structure with default values"""
+def initialise():
+    """
+    Initialises and returns the default settings for the application.
+
+    This function provides the default configuration required for the application to function. It creates a
+    dictionary with predefined default values such as system logs, paths, hardware configurations,
+    and operational parameters. The intended use of this function is to establish a baseline for the
+    app's settings when it is run for the first time.
+    """
     isettings = {'LastSave': '01/01/2000 00:00:01',
                  'app-name': 'Tombola-Py',
                  'STW_forward': 1142,
@@ -64,12 +75,37 @@ def initialise():  # Default values written to the settings.json file the first 
                  'station': 1,
                  'stopbits': 1,
                  'syslog': '/var/log/syslog',
-                 'serialtimeout': 0.75}
+                 'serialtimeout': 0.75,
+                 'camera0': {
+                     'cameraBrightness': 10,
+                     'cameraContrast': 10,
+                     'cameraFPS': 5,
+                     'cameraGain': 0,
+                     'cameraGamma': 0,
+                     'cameraHeight': 640,
+                     'cameraHue': 0,
+                     'cameraID': 0,
+                     'cameraSaturation': 0,
+                     'cameraSharpness': 0,
+                     'cameraWidth': 480
+                 }
+                 }
     return isettings
+
+def generate_api_key(key_len):
+    """generate a new random api-key"""
+    allowed_characters = "ABCDEFGHJKLMNPQRSTUVWXYZ-+~abcdefghijkmnopqrstuvwxyz123456789"
+    return ''.join(random.choice(allowed_characters) for _ in range(key_len))
 
 
 def readsettings():
-    """Read the json file"""
+    """
+    Reads settings from a JSON file.
+
+    This function attempts to load a JSON file named 'settings.json' into
+    a dictionary. If the file is not found, it handles the exception and
+    returns an empty dictionary. The file is expected to be UTF-8 encoded.
+    """
     try:
         with open('settings.json', encoding='UTF-8') as json_file:
             jsettings = json.load(json_file)
@@ -80,7 +116,12 @@ def readsettings():
 
 
 def loadsettings():
-    """Replace the default settings with thsoe from the json files"""
+    """
+    Loads the application settings and updates them based on the values read from an external
+    source. The method compares the existing `settings` with the default settings, and updates
+    the `settings` with the values if available. If a default value is used for any setting
+    due to its absence in the external source, the updated settings are saved back.
+    """
     global settings
     settingschanged = 0
     fsettings = readsettings()
@@ -90,6 +131,9 @@ def loadsettings():
         except KeyError:
             print(f'settings[{item}] Not found in json file using default')
             settingschanged = 1
+    if settings['api-key'] == 'change-me':
+        settings['api-key'] = generate_api_key(30)
+        settingschanged = 1
     if settingschanged == 1:
         writesettings()
 
