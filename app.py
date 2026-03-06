@@ -19,10 +19,11 @@ URL: https://github.com/garytwinnington/tombola-py-web-app
 
 import subprocess
 from threading import enumerate as enumerate_threads
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, Response
 from app_control import settings, VERSION
 from motor_class import MotorClass
 from logmanager import logger
+from camera_class import video_camera_instance_0
 
 
 logger.info('Starting Tombola web app version %s', VERSION)
@@ -85,6 +86,10 @@ def api():
         logger.warning('API: bad json message from %s', request.headers['X-Forwarded-For'])
         return "badly formed json message", 400
 
+@app.route('/VideoFeed0')
+def video_feed0():
+    """The image feed read by the browser for camera 0"""
+    return Response(video_camera_instance_0.mpeg_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/pylog')  # display the application log
 def showplogs():
