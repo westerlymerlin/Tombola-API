@@ -33,11 +33,11 @@
               idtoupdate.innerHTML = statusdata.requested_speed;
             }
         </script>
-</head>
-<body onload="getstatusdata()">
+    </head>
+    <body onload="getstatusdata()">
 
-    <section class="banner">
-		  <div >
+        <section class="banner">
+            <div >
               <table>
                 <tr>
                     <td><P class="logo">Riverbed Simulator<br> Tombola Controller Status &nbsp CPU <strong id="123-cpu">awaiting-data</strong>&deg;C</P></td>
@@ -48,83 +48,83 @@
               <a href = "/guaccesslog" class="breadcrumblink">Website Access Log</a> &nbsp|&nbsp
               <a href = "/guerrorlog" class="breadcrumblink">Website Error Log</a> &nbsp|&nbsp
               <a href = "/syslog" class="breadcrumblink">System Log</a></p><br>
-          </div>
-  </section>
-<section class="container2">
-    <p class="sectiontext">V20 Motor Controller Values</p>
-        <table >
-            <thead>
-                <td class="tabledataleft"><B>Register</B></td>
-                <td class="tabledataleft"><B>Actual Value</B></td>
-                <td class="tabledataleft"><B>Requested Value</B></td>
-            </thead>
-            <tr>
+            </div>
+        </section>
+        <section class="container2">
+            <p class="sectiontext">V20 Motor Controller Values</p>
+            <table >
+                <thead>
+                    <td class="tabledataleft"><B>Register</B></td>
+                    <td class="tabledataleft"><B>Actual Value</B></td>
+                    <td class="tabledataleft"><B>Requested Value</B></td>
+                </thead>
+                <tr>
                     <td class="tabledataleft">Running</td>
                     <td class="tabledataleft" id="123-running">&nbsp;</td>
                     <td class="tabledataleft" id="456-running">awaiting-data</td>
-            </tr>
-            <tr>
+                </tr>
+                <tr>
                     <td class="tabledataleft">Inverter Frequency</td>
-                <td class="tabledataleft"> <slot id="123-frequency">awaiting-data</slot> (Hz)</td>
-                <td class="tabledataleft"><slot id="456-frequency">awaiting-data</slot> (Hz)</td>
-            </tr>
-            <tr>
+                    <td class="tabledataleft"> <slot id="123-frequency">awaiting-data</slot> (Hz)</td>
+                    <td class="tabledataleft"><slot id="456-frequency">awaiting-data</slot> (Hz)</td>
+                </tr>
+                <tr>
                     <td class="tabledataleft">Output Voltage</td>
-                <td class="tabledataleft"><slot id="123-voltage">awaiting-data</slot> (V)</td>
-            </tr>
-            <tr>
+                    <td class="tabledataleft"><slot id="123-voltage">awaiting-data</slot> (V)</td>
+                </tr>
+                <tr>
                     <td class="tabledataleft">Output Current</td>
-                <td class="tabledataleft"><slot id="123-current">awaiting-data</slot> (A)</td>
-            </tr>
-            <tr>
+                    <td class="tabledataleft"><slot id="123-current">awaiting-data</slot> (A)</td>
+                </tr>
+                <tr>
                     <td class="tabledataleft">Motor RPM</td>
                     <td class="tabledataleft" id="123-rpm">awaiting-data</td>
-            </tr>
-            <tr>
+                </tr>
+                <tr>
                     <td class="tabledataleft">Tombola RPM</td>
                     <td class="tabledataleft" id="123-tom-rpm">awaiting-data</td>
-                <td class="tabledataleft"><slot id="456-tom-rpm">awaiting-data</slot> (rpm)</td>
-            </tr>
-            {% for thread in threadcount %}
-            <tr>
+                    <td class="tabledataleft"><slot id="456-tom-rpm">awaiting-data</slot> (rpm)</td>
+                </tr>
+                {% for thread in threadcount %}
+                <tr>
                     <td class="tabledataleft">{{thread[0]}}</td>
                     <td class="tabledataleft">{{thread[1]}}</td>
-            </tr>
-            {% endfor %}
-      </table>
-    <p>&nbsp</p>
-    <p class="sectiontext">Change Settings</p>
-    <table>
-            <tr>
+                </tr>
+                {% endfor %}
+            </table>
+            <p>&nbsp</p>
+            <p class="sectiontext">Change Settings</p>
+            <table>
+                <tr>
                     <form id="startform">
                     <td class="tabledataleft"><button class="gentext" form="startform" formmethod="POST" onclick="location.href='/'">Start Tombola</button></td>
                     <td class="tabledataleft">Tombola RPM: <input class="gentext" type="text" name="websetrpm" value="{{rpm}}"> (0.1 - {{ rpm_max}})</td>
                     </form>
-            </tr>
-            <tr>
-                <form id="stopform">
-                    <td class="tabledataleft"><button class="gentext" form="stopform" formmethod="POST"  onclick="location.href='/'">Stop Tombola</button></td>
-                     <input type="hidden" name="stop" value="1">
-                </form>
-            </tr>
-            <tr>
-                <form id="timeform">
-                    <td class="tabledataleft"><button class="gentext" form="timeform" formmethod="POST"  onclick="location.href='/'">Update Stop Time</button></td>
-                     <td class="tabledataleft">Stop Time: <input class="gentext" type="text" name="stoptime" value="{{stoptimer['stoptime']}}"> (HH:MM:SS)</td>
-                     <td class="tabledataleft">Auto Stop: <input class="gentext" type="checkbox" name="autostop" value=1 {% if stoptimer['autostop'] == 1 %} checked=true {% endif %}></td>
-                </form>
-            </tr>
-            <tr>
-                <form id="resetform">
-                <td class="tabledataleft"><button class="gentext" form="resetform" formmethod="POST"  onclick="location.href='/'">Reset v20</button></td>
-                <input type="hidden" name="reset" value="1">
-                <td class="tabledataleft">To be used after a power cycle of the v20 controller to reset the running parameters</td>
-                </form>
-            </tr>
-    </table>
+                </tr>
+                <tr>
+                    <form id="stopform">
+                        <td class="tabledataleft"><button class="gentext" form="stopform" formmethod="POST"  onclick="location.href='/'">Stop Tombola</button></td>
+                        <input type="hidden" name="stop" value="1">
+                    </form>
+                </tr>
+                <tr>
+                    <form id="timeform">
+                        <td class="tabledataleft"><button class="gentext" form="timeform" formmethod="POST"  onclick="location.href='/'">Update Stop Time</button></td>
+                        <td class="tabledataleft">Stop Time: <input class="gentext" type="text" name="stoptime" value="{{stoptimer['stoptime']}}"> (HH:MM:SS)</td>
+                        <td class="tabledataleft">Auto Stop: <input class="gentext" type="checkbox" name="autostop" value=1 {% if stoptimer['autostop'] == 1 %} checked=true {% endif %}></td>
+                    </form>
+                </tr>
+                <tr>
+                    <form id="resetform">
+                        <td class="tabledataleft"><button class="gentext" form="resetform" formmethod="POST"  onclick="location.href='/'">Reset v20</button></td>
+                        <input type="hidden" name="reset" value="1">
+                        <td class="tabledataleft">To be used after a power cycle of the v20 controller to reset the running parameters</td>
+                    </form>
+                </tr>
+            </table>
 
-    <p>&nbsp</p>
-<p>&nbsp</p>
+            <p>&nbsp</p>
+            <p>&nbsp</p>
             <table>
                 <thead>
                     <td class="tabledataleft"><a href = "{{ url_for('video_feed0') }}">Camera 0</a></td>
@@ -133,16 +133,20 @@
                     <td class="tableimage" >
                         <img
                                 src="{{ url_for('video_feed0') }}"
+                                width="300"
                                 alt=" Webcam feed camera 0"
                                 onclick="openModal(this.src)"
                                 style="cursor: pointer;"></img>
                     </td>
                 </tr>
             </table>
-</section>
-  <section class="banner">
- <div class ="copyright"><strong>Software Version</strong> {{version}} </div>
-	  </section>
-
-</body>
+        </section>
+        <section class="banner">
+            <div class ="copyright"><strong>Software Version</strong> {{version}} </div>
+        </section>
+        <!-- Modal for full-size image -->
+        <div id="imageModal" class="modal" onclick="closeModal()">
+            <img class="modal-content" id="modalImage">
+        </div>
+    </body>
 </html>
