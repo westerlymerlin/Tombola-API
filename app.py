@@ -19,7 +19,7 @@ URL: https://github.com/westerlymerlin
 
 import subprocess
 from threading import enumerate as enumerate_threads
-from flask import Flask, render_template, jsonify, request, Response
+from flask import Flask, render_template, jsonify, request, Response, send_file
 from app_control import settings, VERSION
 from motor_class import MotorClass
 from logmanager import logger
@@ -133,6 +133,16 @@ def showslogs():
     logs.reverse()
     return render_template('logviewer.html', rows=logs, log='system log', version=VERSION)
 
+@app.route('/documentation')
+def download_manual():
+    """
+    Handles the request to download the application's manual.
+
+    This function serves the PDF manual of the application as a downloadable
+    attachment. The manual file's name is retrieved from the application
+    settings and provided as the download name.
+    """
+    return send_file('README.pdf', download_name='tombola-api.pdf', as_attachment=True)
 
 if __name__ == '__main__':
     app.run()
