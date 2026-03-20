@@ -127,7 +127,7 @@ def showgelogs():
 @app.route('/syslog')  # display the raspberry pi system log
 def showslogs():
     """Displays the last 2000 lines if the system log file via the logviewer.html template"""
-    log = subprocess.Popen('journalctl --system --system -n 2000', shell=True,
+    log = subprocess.Popen('/bin/journalctl -n 2000', shell=True,
                            stdout=subprocess.PIPE).stdout.read().decode(encoding='utf-8')
     logs = log.split('\n')
     logs.reverse()
