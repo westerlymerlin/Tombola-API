@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source /home/tompi/.venv/bin/activate
+

@@ -6,13 +6,6 @@
 # Include files from /etc/network/interfaces.d:
 source-directory /etc/network/interfaces.d
 
-allow-hotplug eth0
-iface eth0 inet static
-        address 128.40.78.83
-        netmask 255.255.255.0
-        network 128.40.78.0
-        broadcast 128.40.78.255
-        gateway 128.40.78.245
 
 
 
