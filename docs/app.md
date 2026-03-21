@@ -49,6 +49,10 @@ URL: https://github.com/westerlymerlin
 
 ## Response
 
+<a id="app.send_file"></a>
+
+## send\_file
+
 <a id="app.settings"></a>
 
 ## settings
@@ -174,4 +178,19 @@ def showslogs()
 ```
 
 Displays the last 2000 lines if the system log file via the logviewer.html template
+
+<a id="app.download_manual"></a>
+
+#### download\_manual
+
+```python
+@app.route('/documentation')
+def download_manual()
+```
+
+Handles the request to download the application's manual.
+
+This function serves the PDF manual of the application as a downloadable
+attachment. The manual file's name is retrieved from the application
+settings and provided as the download name.
 
