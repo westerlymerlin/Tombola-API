@@ -78,12 +78,12 @@ def api():
             if request.headers['Api-Key'] == settings['api-key']:  # check for correct API key
                 status = tom.parse_control_message(request.json)
                 return jsonify(status), 201
-            logger.warning('API: access attempt using an invalid token from %s', request.headers['X-Forwarded-For'])
-            return 'access token(s) unauthorised', 401
-        logger.warning('API: access attempt without a token from %s', request.headers['X-Forwarded-For'])
-        return 'access token(s) incorrect', 401
+            logger.warning('API: access attempt using an invalid Api-Key')
+            return 'Api-Key unauthorised', 401
+        logger.warning('API: access attempt without an Api-Key')
+        return 'Api-Key missing', 401
     except KeyError:
-        logger.warning('API: bad json message from %s', request.headers['X-Forwarded-For'])
+        logger.warning('API: bad json message')
         return "badly formed json message", 400
 
 @app.route('/VideoFeed0')
