@@ -40,7 +40,7 @@ class MotorClass:
         autoshutdowntime (int): Time duration (in seconds) before the motor shuts down automatically.
         rpm_hz (int): Ratio of revolutions per minute (RPM) to frequency (Hz).
         requested_rpm (float): The desired RPM of the motor.
-        serialaccess (bool): Indicates whether the class is actively communicating with the controller.
+        serial_access (bool): Indicates whether the class is actively communicating with the controller.
         rpm (RPMClass): Instance of the RPMClass used to measure and control motor speed.
     """
     def __init__(self):
@@ -55,7 +55,7 @@ class MotorClass:
         self.autoshutdowntime = settings['shutdowntime']
         self.rpm_hz = settings['rpm_frequency']
         self.requested_rpm = 0
-        self.serialaccess = False
+        self.serial_access = False
         self.rpm = RPMClass()
         timerthread = Timer(1, self.auto_stop_timer)
         timerthread.name = 'Auto Stop Thread'
@@ -74,7 +74,7 @@ class MotorClass:
             logger.debug('MotorClass: RS485 controller setup with modbus')
             # logger.debug('MotorClass: Resetting v20')
             # self.write_register(self.stw_control_register, settings['STW_forward'])
-            # logger.debug('MotorClass: settimg speed to 0')
+            # logger.debug('MotorClass: setting speed to 0')
             # self.stop()
         except serial.serialutil.SerialException:
             logger.error('MotorClass: init Error - no controller connected, '
@@ -89,18 +89,6 @@ class MotorClass:
         a minimum threshold and capping the RPM at a predefined maximum. The motor's
         running state and direction are updated accordingly, and the speed control logic
         is invoked.
-
-        Args:
-            required_rpm (float | int): The desired speed in revolutions per minute (RPM).
-                                        This value is rounded to one decimal place.
-
-        Raises:
-            ValueError: The method does not raise this error internally, but it ensures
-                        that non-convertible inputs are ignored without interrupting
-                        execution.
-
-        Return:
-            None
         """
         try:
             required_rpm = int(float(required_rpm) * 10)/10
@@ -136,7 +124,7 @@ class MotorClass:
             return
         speed_diff = rpm - self.requested_rpm  # Difference between actual and requested rpm
         if abs(speed_diff) > 5:
-            logger.debug('MotorClass: RPM diff > 5 so reseting')
+            logger.debug('MotorClass: RPM diff > 5 so resetting')
             self.frequency = int(10 * self.requested_rpm * self.rpm_hz)
         elif speed_diff > 0.1:
             logger.debug('MotorClass: RPM slightly to high, reducing it a bit')
@@ -151,15 +139,15 @@ class MotorClass:
                 logger.info('MotorClass: rpm_hz value should be = %s', rpm_hz)
         if speedchanged:
             try:
-                logger.info('Motorclass: RPM Controller: Current RPM %.2f Desired %.2f setting to frequency %s',
+                logger.debug('Motorclass: RPM Controller: Current RPM %.2f Desired %.2f setting to frequency %s',
                             rpm, self.requested_rpm, self.frequency)
                 self.controller_command([self.frequency, self.running, self.direction, 1])
             except AttributeError:
                 logger.error('MotorClass: rpm_controller function error No RS483 Controller')
-                self.serialaccess = False
+                self.serial_access = False
             except minimalmodbus.NoResponseError:
                 logger.error('MotorClass: rpm_controller function error RS485 timeout')
-                self.serialaccess = False
+                self.serial_access = False
 
 
     def stop(self):
@@ -179,13 +167,13 @@ class MotorClass:
         try:
             logger.info('MotorClass: STOP requested')
             self.controller_command([self.frequency, self.running, self.direction, 0])
-            self.serialaccess = False
+            self.serial_access = False
         except AttributeError:
-            self.serialaccess = False
+            self.serial_access = False
             logger.error('MotorClass: Stop function error No RS483 Controller')
-            self.serialaccess = False
+            self.serial_access = False
         except minimalmodbus.NoResponseError:
-            self.serialaccess = False
+            self.serial_access = False
             logger.error('MotorClass: Stop function error RS485 timeout')
 
 
@@ -198,11 +186,11 @@ class MotorClass:
         of the controller, then closes the serial connection, and resets the access flag.
 
         """
-        while self.serialaccess:
+        while self.serial_access:
             pass
         self.controller.write_registers(self.command_start_register, message)
         self.controller.serial.close()
-        self.serialaccess = False
+        self.serial_access = False
 
     def controller_query(self):
         """
@@ -222,15 +210,15 @@ class MotorClass:
                 - tombola_speed (str): Current tombola speed formatted to two decimal places.
                 - requested_speed (float): The requested RPM value.
         """
-        while self.serialaccess:
+        while self.serial_access:
             pass
-        self.serialaccess = True
+        self.serial_access = True
         try:
             actual_data = self.controller.read_registers(self.query_start_register,
                                                          self.read_length, 3)
             setting_data = self.controller.read_registers(self.command_start_register, 4, 3)
             self.controller.serial.close()
-            self.serialaccess = False
+            self.serial_access = False
             return {'running': running(self.running), 'reqfrequency': setting_data[0] / 100,
                     'frequency': actual_data[0] / 100, 'voltage': actual_data[9], 'current':
                         actual_data[2] / 100,
@@ -238,7 +226,7 @@ class MotorClass:
                     'requested_speed': self.requested_rpm}
         except AttributeError:   # RS485 not plugged in
             self.controller.serial.close()
-            self.serialaccess = False
+            self.serial_access = False
             logger.error('MotorClass: Controller Query Error: RS485 controller is not '
                          'working or not plugged in')
             return {'running': running(self.running), 'reqfrequency': self.frequency / 100,
@@ -248,7 +236,7 @@ class MotorClass:
                     'requested_speed': self.requested_rpm}
         except minimalmodbus.NoResponseError:
             self.controller.serial.close()
-            self.serialaccess = False
+            self.serial_access = False
             logger.error('MotorClass: Controller Query Error: No response from the V20 controller, '
                          'check it is powered on and connected')
             return {'running': running(self.running), 'reqfrequency': self.frequency / 100,
@@ -258,7 +246,7 @@ class MotorClass:
                     'requested_speed': self.requested_rpm}
         except serial.serialutil.SerialException:
             self.controller.serial.close()
-            self.serialaccess = False
+            self.serial_access = False
             logger.error('MotorClass: Controller Query Error: unhandled exception', exc_info=BaseException)
             return {'running': running(self.running), 'reqfrequency': self.frequency / 100,
                     'frequency': '-', 'voltage': '-', 'current': '-', 'rpm': '-',
