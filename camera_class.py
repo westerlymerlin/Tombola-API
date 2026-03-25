@@ -24,6 +24,9 @@ class VideoCameraObject:
 
     """
     def __init__(self, camera_index, camera_config):
+        if settings['camera0_enabled'] == False:
+            logger.info('VideoCameraClass: Camera 0 is disabled')
+            return
         self.video = cv2.VideoCapture(camera_config['cameraID'])
         if not self.video.isOpened():
             logger.error('VideoCameraClass: No video camera found instance=%s', camera_index)

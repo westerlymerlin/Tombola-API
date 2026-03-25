@@ -21,8 +21,8 @@ import subprocess
 from threading import enumerate as enumerate_threads
 from flask import Flask, render_template, jsonify, request, Response, send_file
 from app_control import settings, VERSION
-from motor_class import MotorClass
 from logmanager import logger
+from motor_class import MotorClass
 from camera_class import video_camera_instance_0
 
 
@@ -54,7 +54,7 @@ def index():
                    '<p>The method is not allowed for the requested URL.</p>', 405
         logger.debug('Index page: Web Post received')
         tom.parse_control_message(request.form)
-    return render_template('index.html', rpm_max=settings['rpm_max'], version=VERSION,
+    return render_template('index.html', settings=settings, version=VERSION,
                            rpm=tom.requested_rpm, stoptimer=tom.get_stop_time(), threadcount=threadlister())
 
 

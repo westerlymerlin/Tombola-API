@@ -76,7 +76,7 @@ Attributes:
     autoshutdowntime (int): Time duration (in seconds) before the motor shuts down automatically.
     rpm_hz (int): Ratio of revolutions per minute (RPM) to frequency (Hz).
     requested_rpm (float): The desired RPM of the motor.
-    serialaccess (bool): Indicates whether the class is actively communicating with the controller.
+    serial_access (bool): Indicates whether the class is actively communicating with the controller.
     rpm (RPMClass): Instance of the RPMClass used to measure and control motor speed.
 
 <a id="motor_class.MotorClass.__init__"></a>
@@ -102,18 +102,6 @@ that the RPM is within acceptable limits, stopping the motor if the RPM is below
 a minimum threshold and capping the RPM at a predefined maximum. The motor's
 running state and direction are updated accordingly, and the speed control logic
 is invoked.
-
-Args:
-    required_rpm (float | int): The desired speed in revolutions per minute (RPM).
-                                This value is rounded to one decimal place.
-
-Raises:
-    ValueError: The method does not raise this error internally, but it ensures
-                that non-convertible inputs are ignored without interrupting
-                execution.
-
-Return:
-    None
 
 <a id="motor_class.MotorClass.rpm_controller"></a>
 

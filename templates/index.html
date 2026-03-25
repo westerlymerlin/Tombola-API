@@ -98,7 +98,7 @@
                 <tr>
                     <form id="startform">
                     <td class="tabledataleft"><button class="gentext" form="startform" formmethod="POST" onclick="location.href='/'">Start Tombola</button></td>
-                    <td class="tabledataleft">Tombola RPM: <input class="gentext" type="text" name="websetrpm" value="{{rpm}}"> (0.1 - {{ rpm_max}})</td>
+                    <td class="tabledataleft">Tombola RPM: <input class="gentext" type="text" name="websetrpm" value="{{rpm}}"> (0.1 - {{ settings['rpm_max']}})</td>
                     </form>
                 </tr>
                 <tr>
@@ -122,24 +122,24 @@
                     </form>
                 </tr>
             </table>
-
             <p>&nbsp</p>
-            <p>&nbsp</p>
-            <table>
-                <thead>
-                    <td class="tabledataleft"><a href = "{{ url_for('video_feed0') }}">Camera 0</a></td>
-                </thead>
-                <tr>
-                    <td class="tableimage" >
-                        <img
+            {%  if settings['camera0_enabled'] == True %}
+                <table>
+                    <thead>
+                        <td class="tabledataleft"><a href = "{{ url_for('video_feed0') }}">Camera 0</a></td>
+                    </thead>
+                    <tr>
+                        <td class="tableimage" >
+                            <img
                                 src="{{ url_for('video_feed0') }}"
                                 width="300"
                                 alt=" Webcam feed camera 0"
                                 onclick="openModal(this.src)"
                                 style="cursor: pointer;"></img>
-                    </td>
-                </tr>
-            </table>
+                        </td>
+                    </tr>
+                </table>
+            {% endif %}
             <p class="bodytext">For more information please review the software description: <a href="/documentation">tombola-api.pdf</a>.</p>
         </section>
         <section class="banner">
