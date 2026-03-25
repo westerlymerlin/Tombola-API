@@ -54,7 +54,7 @@ def index():
                    '<p>The method is not allowed for the requested URL.</p>', 405
         logger.debug('Index page: Web Post received')
         tom.parse_control_message(request.form)
-    return render_template('index.html', rpm_max=settings['rpm_max'], version=VERSION,
+    return render_template('index.html', settings=settings, version=VERSION,
                            rpm=tom.requested_rpm, stoptimer=tom.get_stop_time(), threadcount=threadlister())
 
 

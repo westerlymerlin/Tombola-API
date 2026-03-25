@@ -76,6 +76,7 @@ def initialise():
                  'stopbits': 1,
                  'syslog': '/var/log/syslog',
                  'serialtimeout': 0.75,
+                 'camera0_enabled': False,
                  'camera0': {
                      'cameraBrightness': 10,
                      'cameraContrast': 10,
