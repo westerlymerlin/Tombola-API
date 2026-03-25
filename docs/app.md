@@ -61,13 +61,13 @@ URL: https://github.com/westerlymerlin
 
 ## VERSION
 
-<a id="app.MotorClass"></a>
-
-## MotorClass
-
 <a id="app.logger"></a>
 
 ## logger
+
+<a id="app.MotorClass"></a>
+
+## MotorClass
 
 <a id="app.video_camera_instance_0"></a>
 
