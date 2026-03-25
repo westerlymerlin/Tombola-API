@@ -21,8 +21,8 @@ import subprocess
 from threading import enumerate as enumerate_threads
 from flask import Flask, render_template, jsonify, request, Response, send_file
 from app_control import settings, VERSION
-from motor_class import MotorClass
 from logmanager import logger
+from motor_class import MotorClass
 from camera_class import video_camera_instance_0
 
 
