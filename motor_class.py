@@ -353,18 +353,6 @@ class MotorClass:
         Processes the control messages for motor operations by interpreting the keys in the provided message
         dictionary and performing corresponding actions, such as stopping the motor, setting the RPM, resetting
         the controller, accessing registers, or updating stop time. Returns responses for specific queries.
-
-        Args:
-            message (dict): A dictionary containing control instructions, where keys indicate the type
-            of action to perform (e.g., 'stop', 'websetrpm') and values provide additional details
-            for those actions.
-
-        Raises:
-            None
-
-        Returns:
-            Optional[dict]: Response data for specific queries such as reading registers or fetching
-            RPM data. If no response is applicable, returns the result of `controller_query()`.
         """
         if 'stop' in message.keys():
             logger.debug('MotorClass: Stop request recieved from web application')
@@ -407,13 +395,6 @@ def running(value):
 
     The function evaluates the integer input and returns a string
     indicating whether the system is "Running" or "Stopped".
-
-    Parameters:
-    value (int): The input value to evaluate. Expected values are integers.
-
-    Returns:
-    str: Returns "Running" if the input value is 1. Returns "Stopped"
-    otherwise.
     """
     if value == 1:
         return 'Running'
@@ -428,14 +409,6 @@ def time_format_check(value):
     time format 'HH:MM:SS'. It uses the `datetime.strptime` function for this
     purpose. If the format is correct, the function returns True. Otherwise, it
     returns False.
-
-    Parameters:
-    value : str
-        The string to be checked for compliance with the 'HH:MM:SS' time format.
-
-    Returns:
-    bool
-        True if the string adheres to the 'HH:MM:SS' time format, otherwise False.
     """
     try:
         datetime.strptime(value, '%H:%M:%S')
