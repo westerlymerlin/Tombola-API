@@ -355,22 +355,22 @@ class MotorClass:
         the controller, accessing registers, or updating stop time. Returns responses for specific queries.
         """
         if 'stop' in message.keys():
-            logger.debug('MotorClass: Stop request recieved from web application')
+            logger.info('MotorClass: Stop request received from web application')
             self.stop()
         elif 'websetrpm' in message.keys():
-            logger.debug('MotorClass: RPM set by web application')
+            logger.info('MotorClass: RPM set by web application')
             self.set_speed(message['websetrpm'])
         elif 'setrpm' in message.keys():
-            logger.debug('MotorClass: RPM set by API')
+            logger.info('MotorClass: RPM set by API')
             self.set_speed(message['setrpm'])
         elif 'reset' in message.keys():
-            logger.debug('MotorClass: Controller reset requested by web application')
+            logger.info('MotorClass: Controller reset requested by web application')
             self.write_register(self.stw_control_register, settings['STW_forward'])
         elif 'write_register' in message.keys():
-            logger.debug('MotorClass: Write Register recieved via API')
+            logger.debug('MotorClass: Write Register received via API')
             self.write_register(message['write_register'], message['word'])
         elif 'read_register' in message.keys():
-            logger.debug('MotorClass: Read Register recieved via API')
+            logger.debug('MotorClass: Read Register received via API')
             return self.read_register(message['read_register'])
         elif 'rpm_data' in message.keys():
             logger.debug('MotorClass: RPM timing data request via API')
@@ -385,7 +385,7 @@ class MotorClass:
                 self.set_stop_time(False, message['stoptime'])
             logger.debug('Stop time updated via web application')
         else:
-            logger.info('MotorClass: API message recieved but not processed  = %s', message)
+            logger.info('MotorClass: API message received but not processed  = %s', message)
         return self.controller_query()
 
 
