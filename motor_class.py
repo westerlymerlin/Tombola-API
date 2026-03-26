@@ -139,9 +139,13 @@ class MotorClass:
                 logger.info('MotorClass: rpm_hz value should be = %s', rpm_hz)
         if speedchanged:
             try:
+                while self.serial_access:
+                    pass
+                self.serial_access = True
                 logger.debug('Motorclass: RPM Controller: Current RPM %.2f Desired %.2f setting to frequency %s',
                             rpm, self.requested_rpm, self.frequency)
                 self.controller_command([self.frequency, self.running, self.direction, 1])
+                self.serial_access = False
             except AttributeError:
                 logger.error('MotorClass: rpm_controller function error No RS483 Controller')
                 self.serial_access = False
@@ -160,6 +164,9 @@ class MotorClass:
         potential errors during communication with the controller and updates the
         `serialaccess` attribute to indicate the status of the communication link.
         """
+        while self.serial_access:
+            pass
+        self.serial_access = True
         self.direction = 0
         self.frequency = 0
         self.requested_rpm = 0
@@ -211,7 +218,7 @@ class MotorClass:
                 - requested_speed (float): The requested RPM value.
         """
         while self.serial_access:
-            pass
+            sleep(0.1)
         self.serial_access = True
         try:
             actual_data = self.controller.read_registers(self.query_start_register,
