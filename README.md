@@ -5,7 +5,7 @@
 The River simulator consists of a large (1m diameter) drum that can contain water, cement blocks simulate rocks on the riverbed.
 The drum is driven by a 1/4 hp 3 phase motor.
 
-The 3 phase motor is controlled by a **Siemens V20** single phase to 3 phase invertor which is controled via an RS485 
+The 3 phase motor is controlled by a **Siemens V20** single phase to 3 phase invertor which is controlled via an RS485 
 interface using the modbus protocol<br>
 **V20 Datasheet:**
 https://support.industry.siemens.com/cs/attachments/109824500/V20_op_instr_0823_en-US.pdf
@@ -26,7 +26,7 @@ Change log can be found in the file [changelog.txt](./changelog.txt)
 **Web Application**
 <br>
 Accessing the URL `http://[url to your server]` via a web browser will open that status web page. It has buttons to
-allow starting the Tombola at a desired RPM, stopping it and setting an auto-stop time if it is being left unatended.
+allow starting the Tombola at a desired RPM, stopping it and setting an auto-stop time if it is being left unattended.
 
 **Direct API Calls**
 <br>
@@ -86,7 +86,7 @@ Dr Jesse Zondervan
 &nbsp;   
 --------------
 
-#### Copyright (C) 2025 Gary Twinn
+#### Copyright (C) 2026 Gary Twinn
 
 This program is free software: you can redistribute it and/or modify  
 it under the terms of the GNU General Public License as published by  
