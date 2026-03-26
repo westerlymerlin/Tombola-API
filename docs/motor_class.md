@@ -271,18 +271,6 @@ Processes the control messages for motor operations by interpreting the keys in 
 dictionary and performing corresponding actions, such as stopping the motor, setting the RPM, resetting
 the controller, accessing registers, or updating stop time. Returns responses for specific queries.
 
-Args:
-    message (dict): A dictionary containing control instructions, where keys indicate the type
-    of action to perform (e.g., 'stop', 'websetrpm') and values provide additional details
-    for those actions.
-
-Raises:
-    None
-
-Returns:
-    Optional[dict]: Response data for specific queries such as reading registers or fetching
-    RPM data. If no response is applicable, returns the result of `controller_query()`.
-
 <a id="motor_class.running"></a>
 
 #### running
@@ -295,13 +283,6 @@ Determines the operational state based on the given value.
 
 The function evaluates the integer input and returns a string
 indicating whether the system is "Running" or "Stopped".
-
-Parameters:
-value (int): The input value to evaluate. Expected values are integers.
-
-Returns:
-str: Returns "Running" if the input value is 1. Returns "Stopped"
-otherwise.
 
 <a id="motor_class.time_format_check"></a>
 
@@ -317,12 +298,4 @@ This function validates whether the input string follows the proper 24-hour
 time format 'HH:MM:SS'. It uses the `datetime.strptime` function for this
 purpose. If the format is correct, the function returns True. Otherwise, it
 returns False.
-
-Parameters:
-value : str
-    The string to be checked for compliance with the 'HH:MM:SS' time format.
-
-Returns:
-bool
-    True if the string adheres to the 'HH:MM:SS' time format, otherwise False.
 
