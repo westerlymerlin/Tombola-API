@@ -19,7 +19,7 @@ URL: https://github.com/westerlymerlin
 
 import subprocess
 from threading import enumerate as enumerate_threads
-from flask import Flask, render_template, jsonify, request, Response, send_file
+from flask import Flask, render_template, jsonify, request, Response, send_file, send_from_directory
 from app_control import settings, VERSION
 from logmanager import logger
 from motor_class import MotorClass
@@ -40,6 +40,18 @@ def threadlister():
         appthreads.append([appthread.name, appthread.native_id])
     return appthreads
 
+@app.errorhandler(500)
+def internal_server_error(_):
+    """
+    Handles HTTP 500 Internal Server Error responses.
+
+    This function serves a custom 500 error HTML page whenever an Internal Server
+    Error occurs in the application. The response's status code is explicitly set
+    to 500, ensuring proper error handling and browser recognition of the error.
+    """
+    response = send_from_directory('static', '500.html')
+    response.status_code = 500
+    return response
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

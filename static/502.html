@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Riverbed Simulator - System Error 500</title>
+        <title>Riverbed Simulator - System Error 502</title>
         <link href="/static/css/text.css" rel="stylesheet" type="text/css">
         <link rel="shortcut icon" href="/static/images/favicon.ico">
 </head>
@@ -13,14 +13,14 @@
             <div >
               <table>
                 <tr>
-                    <td><P class="logo">Riverbed Simulator<br> Tombola Controller Internal Application Error</P></td>
+                    <td><P class="logo">Riverbed Simulator<br> Tombola Controller Application Not Running</P></td>
                 </tr>
               </table>
 
 
             </div>
         </section>
-       <p class="bodytext"><br>An application error has prevented this web page being rendered by flask, please review the <strong><a href = "/pylog">
-                    Tombola Application Log</a></strong> for more information.<br><br><br></p>
+       <p class="bodytext"><br>The Tombola API python application is not running but the nginx proxy is functioning correctly, please check the
+           <strong>application log and webserver error log</strong> for more information on why the application is not running.<br><br><br></p>
 </body>
 </html>
