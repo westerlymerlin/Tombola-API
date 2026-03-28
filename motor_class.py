@@ -58,6 +58,7 @@ class MotorClass:
         self.serial_access = False
         self.rpm = RPMClass()
         if settings['autoshutdown']:
+            logger.info('MotorClass: auto shutdown enabled')
             timerthread = Timer(1, self.auto_stop_timer)
             timerthread.name = 'Auto Stop Thread'
             timerthread.start()
@@ -72,7 +73,7 @@ class MotorClass:
             self.controller.clear_buffers_before_each_transaction = \
                 settings['clear_buffers_before_call']
             self.controller.close_port_after_each_call = settings['clear_buffers_after_call']
-            logger.debug('MotorClass: RS485 controller setup with modbus')
+            logger.info('MotorClass: RS485 controller setup with modbus on port %s', settings['port'])
             # logger.debug('MotorClass: Resetting v20')
             # self.write_register(self.stw_control_register, settings['STW_forward'])
             # logger.debug('MotorClass: setting speed to 0')
@@ -103,7 +104,7 @@ class MotorClass:
         self.direction = 0
         self.requested_rpm = required_rpm
         self.rpm_controller()
-        logger.debug('MotorClass: Set speed: %s', required_rpm)
+        logger.info('MotorClass: Set speed: %s', required_rpm)
 
     def rpm_controller(self):
         """
@@ -140,8 +141,13 @@ class MotorClass:
                 logger.info('MotorClass: rpm_hz value should be = %s', rpm_hz)
         if speedchanged:
             try:
+                loop_counter = 0
                 while self.serial_access:
-                    pass
+                    loop_counter += 1
+                    sleep(0.1)
+                    if loop_counter > 50:
+                        logger.error('MotorClass: rpm controller function error waiting for RS485 to be free')
+                        return
                 self.serial_access = True
                 logger.debug('Motorclass: RPM Controller: Current RPM %.2f Desired %.2f setting to frequency %s',
                             rpm, self.requested_rpm, self.frequency)
@@ -187,11 +193,14 @@ class MotorClass:
             self.controller.serial.close()
             self.serial_access = False
             logger.error('MotorClass: Stop function error No RS483 Controller')
-            self.serial_access = False
         except minimalmodbus.NoResponseError:
             self.controller.serial.close()
             self.serial_access = False
             logger.error('MotorClass: Stop function error RS485 timeout')
+        except minimalmodbus.InvalidResponseError:
+            self.controller.serial.close()
+            self.serial_access = False
+            logger.error('MotorClass: stop function error RS485 Invalid Response: %s', Exception)
 
 
     def controller_command(self, message):
@@ -210,6 +219,7 @@ class MotorClass:
             if loop_counter > 50:
                 logger.error('MotorClass: Command function error waiting for RS485 to be free')
                 return
+        self.serial_access = True
         self.controller.write_registers(self.command_start_register, message)
         sleep(0.1)
         self.controller.serial.close()
@@ -294,9 +304,18 @@ class MotorClass:
         control information. It ensures the serial connection is subsequently closed
         after the operation and logs the retrieved control word.
         """
+        loop_counter =0
+        while self.serial_access:
+            loop_counter +=1
+            sleep(0.1)
+            if loop_counter > 50:
+                logger.error('MotorClass: Print_controlword function error waiting for RS485 to be free')
+                return
+        self.serial_access = True
         data = self.controller.read_register(99, 0, 3)
         sleep(0.1)
         self.controller.serial.close()
+        self.serial_access = False
         logger.info('Motorclass: read control word: %s', data)
 
     def read_register(self, reg):
@@ -310,15 +329,28 @@ class MotorClass:
         appropriate response.
         """
         try:
+            loop_counter = 0
+            while self.serial_access:
+                loop_counter += 1
+                sleep(0.1)
+                if loop_counter > 50:
+                    logger.error('MotorClass: read_register function error waiting for RS485 to be free')
+                    return {'register': reg, 'word': 'RS485 Controller Busy'}
+            self.serial_access = True
             data = self.controller.read_register(reg, 0, 3)
             sleep(0.1)
             self.controller.serial.close()
+            self.serial_access = False
             logger.debug('MotorClass: read registry: Registry %s. Word %s', reg, data)
             return {'register': reg, 'word': data}
         except AttributeError:
+            self.controller.serial.close()
+            self.serial_access = False
             logger.error('MotorClass: read_register function error No RS483 Controller')
             return {'register': reg, 'word': 'No RS485 Controller'}
         except minimalmodbus.NoResponseError:
+            self.controller.serial.close()
+            self.serial_access = False
             logger.error('MotorClass: read_register function error RS485 timeout')
             return {'register': reg, 'word': 'RS485 Timeout'}
 
@@ -331,14 +363,31 @@ class MotorClass:
         informational or error messages depending on the outcome of the operation.
         """
         try:
+            loop_counter = 0
+            while self.serial_access:
+                loop_counter += 1
+                sleep(0.1)
+                if loop_counter > 50:
+                    logger.error('MotorClass: write_register function error waiting for RS485 to be free')
+                    return
+            self.serial_access = True
             self.controller.write_register(reg, controlword)
             sleep(0.1)
             self.controller.serial.close()
+            self.serial_access = False
             logger.info('MotorClass: write registry: Registry %s. Word %s', reg, controlword)
         except AttributeError:
+            self.controller.serial.close()
+            self.serial_access = False
             logger.error('MotorClass: write_register function error No RS483 Controller')
         except minimalmodbus.NoResponseError:
+            self.controller.serial.close()
+            self.serial_access = False
             logger.error('MotorClass: write_register function error RS485 timeout')
+        except minimalmodbus.InvalidResponseError:
+            self.controller.serial.close()
+            self.serial_access = False
+            logger.error('MotorClass: write_register function error RS485 Invalid Response: %s', Exception)
 
     def set_stop_time(self, autostop, stoptime):
         """
