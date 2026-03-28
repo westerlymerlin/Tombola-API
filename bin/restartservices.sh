@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# script to retsrat the services
+# script to restart the services
 
 echo "
 **** stoping gunicorn and python app ****
