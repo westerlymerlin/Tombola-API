@@ -53,6 +53,10 @@ URL: https://github.com/westerlymerlin
 
 ## send\_file
 
+<a id="app.send_from_directory"></a>
+
+## send\_from\_directory
+
 <a id="app.settings"></a>
 
 ## settings
@@ -90,6 +94,21 @@ def threadlister()
 ```
 
 Lists threads currently running
+
+<a id="app.internal_server_error"></a>
+
+#### internal\_server\_error
+
+```python
+@app.errorhandler(500)
+def internal_server_error(_)
+```
+
+Handles HTTP 500 Internal Server Error responses.
+
+This function serves a custom 500 error HTML page whenever an Internal Server
+Error occurs in the application. The response's status code is explicitly set
+to 500, ensuring proper error handling and browser recognition of the error.
 
 <a id="app.index"></a>
 
