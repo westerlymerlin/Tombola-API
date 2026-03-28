@@ -175,7 +175,7 @@ class MotorClass:
         while self.serial_access:
             loop_counter +=1
             sleep(0.1)
-            if loop_counter > 50:
+            if loop_counter > settings['wait_timeout']:
                 logger.error('MotorClass: Stop function error waiting for RS485 to be free')
                 return
         self.serial_access = True
@@ -216,7 +216,7 @@ class MotorClass:
         while self.serial_access:
             loop_counter +=1
             sleep(0.1)
-            if loop_counter > 50:
+            if loop_counter > settings['wait_timeout']:
                 logger.error('MotorClass: Command function error waiting for RS485 to be free')
                 return
         self.serial_access = True
@@ -247,7 +247,7 @@ class MotorClass:
         while self.serial_access:
             loop_counter +=1
             sleep(0.1)
-            if loop_counter > 50:
+            if loop_counter > settings['wait_timeout']:
                 logger.error('MotorClass: Query function error waiting for RS485 to be free')
                 return {'running': running(self.running), 'reqfrequency': self.frequency / 100,
                         'frequency': 'RS485 busy', 'voltage': 'RS485 busy',
@@ -308,7 +308,7 @@ class MotorClass:
         while self.serial_access:
             loop_counter +=1
             sleep(0.1)
-            if loop_counter > 50:
+            if loop_counter > settings['wait_timeout']:
                 logger.error('MotorClass: Print_controlword function error waiting for RS485 to be free')
                 return
         self.serial_access = True
@@ -333,7 +333,7 @@ class MotorClass:
             while self.serial_access:
                 loop_counter += 1
                 sleep(0.1)
-                if loop_counter > 50:
+                if loop_counter > settings['wait_timeout']:
                     logger.error('MotorClass: read_register function error waiting for RS485 to be free')
                     return {'register': reg, 'word': 'RS485 Controller Busy'}
             self.serial_access = True
@@ -367,7 +367,7 @@ class MotorClass:
             while self.serial_access:
                 loop_counter += 1
                 sleep(0.1)
-                if loop_counter > 50:
+                if loop_counter > settings['wait_timeout']:
                     logger.error('MotorClass: write_register function error waiting for RS485 to be free')
                     return
             self.serial_access = True
