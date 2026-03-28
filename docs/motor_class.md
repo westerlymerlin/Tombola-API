@@ -131,9 +131,7 @@ Stops the motor operation.
 
 This method halts the motor by resetting its direction, frequency, requested
 RPM, and running state to zero. It also communicates the stop command to the
-motor controller, ensuring that the motor stops safely. The method handles
-potential errors during communication with the controller and updates the
-`serialaccess` attribute to indicate the status of the communication link.
+motor controller, ensuring that the motor stops safely.
 
 <a id="motor_class.MotorClass.controller_command"></a>
 
