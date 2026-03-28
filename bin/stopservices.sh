@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# stop serices
+# stop services
 
 echo "
-**** stopping gunicoren and python app ****
+**** stopping Gunicorn and python app ****
 "
 sudo systemctl stop gunicorn.service
 
