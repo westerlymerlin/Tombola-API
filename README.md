@@ -10,7 +10,7 @@ interface using the modbus protocol<br>
 **V20 Datasheet:**
 https://support.industry.siemens.com/cs/attachments/109824500/V20_op_instr_0823_en-US.pdf
   
-The controller application runs on a **Raspberry Pi 3B, 4B pr 5** single board computer. It is written in Python and uses 
+The controller application runs on a **Raspberry Pi 3B, 4B or 5** single board computer. It is written in Python and uses 
 Flask for the Web application server. A USB RS485 controller provides connectivity to the V20 Invertor and the python 
 library **Minimal Modbus** is used for the Modbus protocol.<br>
 **Minimal Modbus Library Documentation** https://minimalmodbus.readthedocs.io/en/stable/
@@ -30,7 +30,7 @@ allow starting the Tombola at a desired RPM, stopping it and setting an auto-sto
 
 **Direct API Calls**
 <br>
-If you POST a json message to the `http://[url to your server]/api` end point the flast app will process the call and
+If you POST a json message to the `http://[url to your server]/api` end point the flask app will process the call and
 return a json message containing the V20 status values.
 
 **API Messages**
@@ -50,7 +50,7 @@ return a json message containing the V20 status values.
 <br>
 These can be run from a the console (via ssh or direct on the raspberry pi) to upgrade to the latest version of the
 python code:<br>
-`deploy-from-git.sh`  Check github for a newer version of the code and if there is download, deply and restart the 
+`deploy-from-git.sh`  Check github for a newer version of the code and if there is download, deploy and restart the 
 python web app<br>
 <br>
 Less often used comamnds used for troubelshooting:<br>
@@ -62,12 +62,12 @@ Less often used comamnds used for troubelshooting:<br>
 
 ---
 
-**settings.json changes for com port**
+**settings.json changes for RS485 com port**
 <br>
 Run the MortorClass.py file first, it will generate a fresh settings.json file<br>
 Plug in the USB RS485 controller and find the port number (*com1* to *com7* on a PC or */dev/ttyUSB0* to
-*/dev/ttyUSB9* on a mac or Raspberry Pi)  <br>
-Change the value for `"port": "com5",`  to suite and run again to pick up the new port accress
+*/dev/ttyUSB9* on a mac or Raspberry Pi). <br>
+Change the value for `"port": "/dev/ttyUSB0",`  to suit your configuration and run again to pick up the new port.
 
 ## License
 [GNU GENERAL PUBLIC LICENSE](./LICENCE)
