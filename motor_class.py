@@ -57,9 +57,10 @@ class MotorClass:
         self.requested_rpm = 0
         self.serial_access = False
         self.rpm = RPMClass()
-        timerthread = Timer(1, self.auto_stop_timer)
-        timerthread.name = 'Auto Stop Thread'
-        timerthread.start()
+        if settings['autoshutdown']:
+            timerthread = Timer(1, self.auto_stop_timer)
+            timerthread.name = 'Auto Stop Thread'
+            timerthread.start()
         try:
             self.controller = minimalmodbus.Instrument(settings['port'], settings['station'],
                                                        minimalmodbus.MODE_RTU)
