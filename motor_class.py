@@ -165,8 +165,13 @@ class MotorClass:
         potential errors during communication with the controller and updates the
         `serialaccess` attribute to indicate the status of the communication link.
         """
+        loop_counter =0
         while self.serial_access:
-            pass
+            loop_counter +=1
+            sleep(0.1)
+            if loop_counter > 50:
+                logger.error('MotorClass: Stop function error waiting for RS485 to be free')
+                return
         self.serial_access = True
         self.direction = 0
         self.frequency = 0
@@ -175,12 +180,16 @@ class MotorClass:
         try:
             logger.info('MotorClass: STOP requested')
             self.controller_command([self.frequency, self.running, self.direction, 0])
+            sleep(0.1)
+            self.controller.serial.close()
             self.serial_access = False
         except AttributeError:
+            self.controller.serial.close()
             self.serial_access = False
             logger.error('MotorClass: Stop function error No RS483 Controller')
             self.serial_access = False
         except minimalmodbus.NoResponseError:
+            self.controller.serial.close()
             self.serial_access = False
             logger.error('MotorClass: Stop function error RS485 timeout')
 
@@ -194,9 +203,15 @@ class MotorClass:
         of the controller, then closes the serial connection, and resets the access flag.
 
         """
+        loop_counter =0
         while self.serial_access:
-            pass
+            loop_counter +=1
+            sleep(0.1)
+            if loop_counter > 50:
+                logger.error('MotorClass: Command function error waiting for RS485 to be free')
+                return
         self.controller.write_registers(self.command_start_register, message)
+        sleep(0.1)
         self.controller.serial.close()
         self.serial_access = False
 
@@ -218,13 +233,23 @@ class MotorClass:
                 - tombola_speed (str): Current tombola speed formatted to two decimal places.
                 - requested_speed (float): The requested RPM value.
         """
+        loop_counter =0
         while self.serial_access:
+            loop_counter +=1
             sleep(0.1)
+            if loop_counter > 50:
+                logger.error('MotorClass: Query function error waiting for RS485 to be free')
+                return {'running': running(self.running), 'reqfrequency': self.frequency / 100,
+                        'frequency': 'RS485 busy', 'voltage': 'RS485 busy',
+                        'current': 'RS485 busy', 'rpm': 'RS485 busy',
+                        'tombola_speed': '%.2f' % self.rpm.get_rpm(),
+                        'requested_speed': self.requested_rpm}
         self.serial_access = True
         try:
             actual_data = self.controller.read_registers(self.query_start_register,
                                                          self.read_length, 3)
             setting_data = self.controller.read_registers(self.command_start_register, 4, 3)
+            sleep(0.1)
             self.controller.serial.close()
             self.serial_access = False
             return {'running': running(self.running), 'reqfrequency': setting_data[0] / 100,
@@ -270,6 +295,7 @@ class MotorClass:
         after the operation and logs the retrieved control word.
         """
         data = self.controller.read_register(99, 0, 3)
+        sleep(0.1)
         self.controller.serial.close()
         logger.info('Motorclass: read control word: %s', data)
 
@@ -285,6 +311,7 @@ class MotorClass:
         """
         try:
             data = self.controller.read_register(reg, 0, 3)
+            sleep(0.1)
             self.controller.serial.close()
             logger.debug('MotorClass: read registry: Registry %s. Word %s', reg, data)
             return {'register': reg, 'word': data}
@@ -305,6 +332,7 @@ class MotorClass:
         """
         try:
             self.controller.write_register(reg, controlword)
+            sleep(0.1)
             self.controller.serial.close()
             logger.info('MotorClass: write registry: Registry %s. Word %s', reg, controlword)
         except AttributeError:
@@ -425,5 +453,5 @@ def time_format_check(value):
         return False
 
 
-if __name__ == '__main__':  # used for standlone testing
+if __name__ == '__main__':  # used for standalone testing
     tom = MotorClass()
