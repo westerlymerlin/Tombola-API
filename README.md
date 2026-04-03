@@ -69,7 +69,11 @@ Plug in the USB RS485 controller and find the port number (*com1* to *com7* on a
 */dev/ttyUSB9* on a mac or Raspberry Pi). <br>
 Change the value for `"port": "/dev/ttyUSB0",`  to suit your configuration and run again to pick up the new port.
 
-To create a new version of Tombola-API, first clone the repo from Github using the command below:  
+---
+
+**To create a new version of Tombola-API**
+
+Clone the repo from Github using the command below:  
 `git clone https://github.com/westerlymerlin/Tombola-API.git`  
 you will need to have Python 3.12 installed with all the dependencies listed in [requirements.txt](./requirements.txt).  
 `pip install -r requirements.txt`  
@@ -87,12 +91,12 @@ Please commit the changes you have made to git and push to the repository to git
 
 There is an automated workflow that will update the docs files and create a pull request for the code owner to review and merge to the main branch.
 
-
+---
 
 ## License
 [GNU GENERAL PUBLIC LICENSE](./LICENCE)
 
-
+---
 ## Contributors
 Dr Gary Twinn   
 Dr Byron Adams  
@@ -125,4 +129,4 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 Author:  Gary Twinn  
 Repository:  [github.com/westerlymerlin](https://github)
 
--------------
+
