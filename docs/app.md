@@ -85,6 +85,16 @@ URL: https://github.com/westerlymerlin
 
 #### tom
 
+<a id="app.read_cpu_temperature"></a>
+
+#### read\_cpu\_temperature
+
+```python
+def read_cpu_temperature()
+```
+
+Read the CPU temperature and returns in Celsius
+
 <a id="app.threadlister"></a>
 
 #### threadlister
