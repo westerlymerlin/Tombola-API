@@ -29,9 +29,13 @@ from camera_class import video_camera_instance_0
 logger.info('Starting Tombola web app version %s', VERSION)
 app = Flask(__name__)
 tom = MotorClass()
-
 logger.info('Api-Key = %s', settings['api-key'])
 
+def read_cpu_temperature():
+    """Read the CPU temperature and returns in Celsius"""
+    with open(settings['cputemp'], 'r', encoding='utf-8') as f:
+        log = f.readline()
+    return round(float(log) / 1000, 1)
 
 def threadlister():
     """Lists threads currently running"""
@@ -74,11 +78,8 @@ def index():
 def statusdata():
     """Status data read by javascript on default website"""
     ctrldata = tom.controller_query()  # Query the motor controller for current data
-    with open(settings['cputemp'], 'r', encoding='UTF-8') as f:  # Get CPU temperature
-        log = f.readline()
-    f.close()
-    cputemperature = round(float(log) / 1000, 1)
-    ctrldata['cpu'] = cputemperature
+    ctrldata['cpu'] = read_cpu_temperature()
+    ctrldata['status_message'] = settings['status_message']
     return jsonify(ctrldata), 201
 
 

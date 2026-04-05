@@ -269,6 +269,20 @@ Processes the control messages for motor operations by interpreting the keys in 
 dictionary and performing corresponding actions, such as stopping the motor, setting the RPM, resetting
 the controller, accessing registers, or updating stop time. Returns responses for specific queries.
 
+<a id="motor_class.set_status_message"></a>
+
+#### set\_status\_message
+
+```python
+def set_status_message(message)
+```
+
+Updates the status message with a timestamp and saves it.
+
+This function updates the status message in the application settings by
+appending the current date and time to the provided message. After updating
+the status, it writes the changes to the settings file.
+
 <a id="motor_class.running"></a>
 
 #### running
