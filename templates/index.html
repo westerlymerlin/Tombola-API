@@ -15,6 +15,8 @@
               const statusdata = await response.json();
               var idtoupdate = document.getElementById('123-cpu');
               idtoupdate.innerHTML = statusdata.cpu;
+              var idtoupdate = document.getElementById('456-status');
+              idtoupdate.innerHTML = statusdata.status_message;
               var idtoupdate = document.getElementById('456-running');
               idtoupdate.innerHTML = statusdata.running;
               var idtoupdate = document.getElementById('123-frequency');
@@ -91,6 +93,13 @@
                     <td class="tabledataleft">{{thread[1]}}</td>
                 </tr>
                 {% endfor %}
+            </table>
+            <p>&nbsp</p>
+            <table>
+                <tr>
+                    <td class="tabledataleft">Tombola Status</td>
+                    <td class="tabledataleft"><slot id="456-status">awaiting-data</slot></td>
+                </tr>
             </table>
             <p>&nbsp</p>
             <p class="sectiontext">Change Settings</p>

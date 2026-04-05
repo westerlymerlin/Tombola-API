@@ -97,6 +97,7 @@ class MotorClass:
         except ValueError:
             return
         if required_rpm < 0.1:
+            set_status_message('Stop Command Received')
             self.stop()
             return
         required_rpm = min(required_rpm, settings['rpm_max'])
@@ -443,9 +444,26 @@ class MotorClass:
             else:
                 self.set_stop_time(False, message['stoptime'])
             logger.debug('Stop time updated via web application')
+        elif 'status_message' in message.keys():
+            set_status_message(message['status_message'])
+            logger.info('MotorClass: Status message received from web application:\n"%s"', message['status_message'])
+            return {'status_message': message['status_message']}
         else:
             logger.info('MotorClass: API message received but not processed  = %s', message)
         return self.controller_query()
+
+
+def set_status_message(message):
+    """
+    Updates the status message with a timestamp and saves it.
+
+    This function updates the status message in the application settings by
+    appending the current date and time to the provided message. After updating
+    the status, it writes the changes to the settings file.
+    """
+    status_message = datetime.now().strftime('%d/%m/%Y %H:%M:%S') + ' ' + message
+    settings['status_message'] = status_message
+    writesettings()
 
 
 def running(value):

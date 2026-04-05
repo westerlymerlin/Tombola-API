@@ -22,7 +22,7 @@ import json
 from datetime import datetime
 
 
-VERSION = '1.8.2'
+VERSION = '1.9.0'
 
 
 def writesettings():
@@ -50,6 +50,7 @@ def initialise():
                  'STW_register': 99,
                  'STW_stop': 0,
                  'api-key': 'change-me',
+                 'status_message': '',
                  'autoshutdown': True,
                  'baud': 9600,
                  'bytesize': 8,

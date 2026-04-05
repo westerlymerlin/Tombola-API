@@ -2,7 +2,7 @@
 
 **An application to control the Riverbed Simulator.**
 <br>
-The River simulator consists of a large (1m diameter) drum that can contain water, cement blocks simulate rocks on the riverbed.
+The River simulator consists of a large (1 metre diameter) drum that can contain water, cement blocks simulate rocks on the riverbed.
 The drum is driven by a 1/4 hp 3 phase motor.
 
 The 3 phase motor is controlled by a **Siemens V20** single phase to 3 phase invertor which is controlled via an RS485 
@@ -35,14 +35,15 @@ return a json message containing the V20 status values.
 
 **API Messages**
 <br>
-`{"setrpm": n.n}`  Start the tombola running and hold it at n.n rpm (0.1 - 74.9 rpm)<br>
+`{"setrpm": n.n}`  Start the tombola running and hold it at n.n rpm (0.1–74.9 rpm)<br>
 `{"setrpm": 0}`  Stop the tombola<br>
 `{"rpm": True}`  Read the tombola RPM<br>
-`{"rpm_data": True}`  Read the tombola abs sensor timing data from 3 revolutions<br>
+`{"rpm_data": True}`  Read the tombola abs sensor timing data from three revolutions<br>
 `{"write_register": rr, "word": ww}`  Write the word ww to the register rr<br>
 `{"read_register": rr}`  Read the value from the register rr<br>
 `{"stoptime": "HH:MM:SS", "autostop": true}` set the controller to auto shut off at HH:MM:SS<br>
 `{"stoptime": "HH:MM:SS", "autostop": false}` Disable auto stop
+`{"status_message": "message to be displayed on the web page"}`  Set a status message to be displayed on the web page
 
 ---
 
@@ -50,7 +51,7 @@ return a json message containing the V20 status values.
 <br>
 These can be run from a the console (via ssh or direct on the raspberry pi) to upgrade to the latest version of the
 python code:<br>
-`deploy-from-git.sh`  Check github for a newer version of the code and if there is download, deploy and restart the 
+`deploy-from-git.sh`  Checks github for a newer version of the code and if there is, download, deploy, and restart the 
 python web app<br>
 <br>
 Less often used comamnds used for troubelshooting:<br>
@@ -94,7 +95,7 @@ There is an automated workflow that will update the docs files and create a pull
 ---
 
 ## License
-[GNU GENERAL PUBLIC LICENSE](./LICENCE)
+[GNU GENERAL PUBLIC LICENSE](./LICENSE)
 
 ---
 ## Contributors
@@ -110,7 +111,7 @@ Dr Jesse Zondervan
 &nbsp;   
 --------------
 
-#### Copyright (C) 2026 Gary Twinn
+#### Copyright © 2026 Gary Twinn
 
 This program is free software: you can redistribute it and/or modify  
 it under the terms of the GNU General Public License as published by  
